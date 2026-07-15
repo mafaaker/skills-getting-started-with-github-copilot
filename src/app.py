@@ -3,6 +3,14 @@ High School Management System API
 
 A super simple FastAPI application that allows students to view and sign up
 for extracurricular activities at Mergington High School.
+Git branch instructions:
+To create and publish a new branch called "accelerate-with-copilot":
+
+    git checkout -b accelerate-with-copilot
+    git push -u origin accelerate-with-copilot
+
+These commands create the branch locally and push it to the remote, setting the
+upstream so future git push/pull use the same branch.
 """
 
 from fastapi import FastAPI, HTTPException
@@ -41,6 +49,46 @@ activities = {
     }
 }
 
+# Additional activities
+activities.update({
+    "Soccer Team": {
+        "description": "Outdoor team soccer practices and matches",
+        "schedule": "Tuesdays and Thursdays, 4:00 PM - 6:00 PM",
+        "max_participants": 22,
+        "participants": ["alex@mergington.edu"]
+    },
+    "Basketball Club": {
+        "description": "Pickup games and skill development for basketball",
+        "schedule": "Wednesdays, 4:30 PM - 6:00 PM",
+        "max_participants": 15,
+        "participants": ["chris@mergington.edu"]
+    },
+    "Art Club": {
+        "description": "Explore drawing, painting, and mixed media projects",
+        "schedule": "Mondays, 3:30 PM - 5:00 PM",
+        "max_participants": 20,
+        "participants": ["ava@mergington.edu"]
+    },
+    "Drama Club": {
+        "description": "Acting, stagecraft, and productions throughout the year",
+        "schedule": "Thursdays, 3:30 PM - 5:30 PM",
+        "max_participants": 25,
+        "participants": ["liam@mergington.edu"]
+    },
+    "Debate Team": {
+        "description": "Practice public speaking, argumentation, and competitions",
+        "schedule": "Fridays, 3:30 PM - 5:00 PM",
+        "max_participants": 18,
+        "participants": ["sophia@mergington.edu"]
+    },
+    "Robotics Club": {
+        "description": "Design and build robots for challenges and tournaments",
+        "schedule": "Tuesdays, 4:00 PM - 6:00 PM",
+        "max_participants": 16,
+        "participants": ["ethan@mergington.edu"]
+    }
+})
+
 
 @app.get("/")
 def root():
@@ -61,6 +109,11 @@ def signup_for_activity(activity_name: str, email: str):
 
     # Get the specific activity
     activity = activities[activity_name]
+
+
+# Validate student is not already signed up
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Student is already signed up for this activity")
 
     # Add student
     activity["participants"].append(email)
